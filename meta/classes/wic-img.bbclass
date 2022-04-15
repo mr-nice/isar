@@ -141,8 +141,8 @@ python check_for_wic_warnings() {
 do_wic_image[file-checksums] += "${WKS_FILE_CHECKSUM}"
 do_wic_image[dirs] = "${DEPLOY_DIR_IMAGE}"
 python do_wic_image() {
-    cmds = ['wic_do_mounts', 'generate_wic_image', 'check_for_wic_warnings']
-    weights = [5, 90, 5]
+    cmds = ['wic_do_mounts', 'generate_wic_image', 'check_for_wic_warnings', 'wic_undo_mounts']
+    weights = [5, 90, 5, 5]
     progress_reporter = bb.progress.MultiStageProgressReporter(d, weights)
 
     for cmd in cmds:
@@ -161,6 +161,19 @@ wic_do_mounts() {
             mkdir -p ${BUILDCHROOT_DIR}/$dir
             if ! mountpoint ${BUILDCHROOT_DIR}/$dir >/dev/null 2>&1; then
                 mount --bind --make-private $dir ${BUILDCHROOT_DIR}/$dir
+            fi
+        done
+        ) 9>${MOUNT_LOCKFILE}
+EOSUDO
+}
+
+wic_undo_mounts() {
+    sudo -s <<'EOSUDO'
+        ( flock 9
+        set -e
+        for dir in ${BITBAKEDIR} ${SCRIPTSDIR} ${STAGING_DIR} ${BBLAYERS}; do
+            if mountpoint ${BUILDCHROOT_DIR}/$dir >/dev/null 2>&1; then
+                umount ${BUILDCHROOT_DIR}/$dir
             fi
         done
         ) 9>${MOUNT_LOCKFILE}
