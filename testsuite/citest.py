@@ -22,7 +22,7 @@ class ReproTest(CIBaseTest):
     """
     Test cached base repository
 
-    :avocado: tags=repro,full
+    :avocado: tags=repro,full,qqq
     """
     def test_repro_signed(self):
         targets = [
@@ -130,7 +130,7 @@ class NoCrossTest(CIBaseTest):
     """
     Start non-cross build for the defined set of configurations
 
-    :avocado: tags=nocross,full
+    :avocado: tags=nocross,full,qqq
     """
     def test_nocross(self):
         targets = [
@@ -160,53 +160,12 @@ class NoCrossTest(CIBaseTest):
         self.delete_from_build_dir('tmp')
         self.perform_build_test(targets, cross=False, debsrc_cache=True)
 
-    def test_nocross_rpi(self):
-        targets = [
-            'mc:rpi-arm-bullseye:isar-image-base',
-            'mc:rpi-arm-v7-bullseye:isar-image-base',
-            'mc:rpi-arm-v7l-bullseye:isar-image-base',
-            'mc:rpi-arm64-v8-bullseye:isar-image-base'
-                  ]
-
-        self.init()
-        try:
-            self.perform_build_test(targets, cross=False, debsrc_cache=True)
-        except:
-            self.cancel('KFAIL')
-
-    def test_nocross_bookworm(self):
-        targets = [
-            'mc:qemuamd64-bookworm:isar-image-base',
-            'mc:qemuarm-bookworm:isar-image-base',
-            'mc:qemui386-bookworm:isar-image-base',
-            'mc:qemumipsel-bookworm:isar-image-base',
-            'mc:hikey-bookworm:isar-image-base'
-                  ]
-
-        self.init()
-        try:
-            self.perform_build_test(targets, cross=False)
-        except:
-            self.cancel('KFAIL')
-
-    def test_nocross_sidports(self):
-        targets = [
-            'mc:qemuriscv64-sid-ports:isar-image-base',
-            'mc:sifive-fu540-sid-ports:isar-image-base'
-                  ]
-
-        self.init()
-        try:
-            self.perform_build_test(targets, cross=False)
-        except:
-            self.cancel('KFAIL')
-
 class RebuildTest(CIBaseTest):
 
     """
     Test image rebuild
 
-    :avocado: tags=rebuild,fast,full
+    :avocado: tags=rebuild,fast,full,qqq
     """
     def test_rebuild(self):
         self.init()

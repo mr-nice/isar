@@ -142,6 +142,8 @@ export VIRTUAL_ENV="./"
 # the real stuff starts here, trace commands from now on
 set -x
 
+TAGS="qqq"
+
 avocado $VERBOSE run "$TESTSUITE_DIR/citest.py" \
     -t $TAGS --test-runner=runner --disable-sysinfo \
     -p quiet=$QUIET -p cross=$CROSS_BUILD -p time_to_wait=$TIMEOUT
